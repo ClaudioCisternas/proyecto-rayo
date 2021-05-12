@@ -7,6 +7,10 @@ function validar() {
     if (resp==false){
         return false;
     }
+    resp = validarFecha();
+    if (resp==false) {
+        return false;
+    }
     return true;
 }
 
@@ -66,3 +70,41 @@ function validarRut(){
     }
 }   
 
+function validarFecha(){
+    var fechaUsuario = document.getElementById('txtFechaNac').value;
+    var fechaSistema = new Date();
+    console.log('Fecha Usuario:'+fechaUsuario);
+    console.log('Fecha Sistema:'+fechaSistema);
+    /////////////////////////////////////////////////////
+    var ano = fechaUsuario.slice(0,4);
+    var mes = fechaUsuario.slice(5,7);
+    var dia = fechaUsuario.slice(8,10);
+    console.log('Año:'+ano+'Mes:'+mes+'Dia:'+dia);
+    var fechaNuevaUsuario = new Date(ano,mes,dia);
+    console.log('Fecha Nueva:'+fechaNuevaUsuario);
+    /////////////////////////////////////////////////////
+    if (fechaNuevaUsuario > fechaSistema) {
+        //alert('fecha de nacimiento incorrecta');
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'fecha incorrecta!'
+          });
+        return false;
+    }
+    /////////////////////////////////////////////////////
+    var elDia = 24 * 60 * 60 * 1000; //transformar día a milisegundos
+    var dias = (fechaSistema.getTime()- fechaNuevaUsuario.getTime()) / elDia;
+    console.log('Dias:'+dias);
+    var anos = Math.trunc ( dias / 365);
+    if (anos < 18) {
+        //alert('eres menor de edad, tienes '+anos+' años de edad');
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'eres menor de edad, tienes '+anos+' años de edad'
+          });
+        return false;
+    }
+    return true;
+}
